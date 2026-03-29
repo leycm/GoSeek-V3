@@ -85,36 +85,34 @@ GoSeek-V3 supports multiple inference backends. Since FP8 training is natively a
 
 ```shell
 cd inference
-python fp8_cast_bf16.py --input-fp8-hf-path /path/to/fp8_weights --output-bf16-hf-path /path/to/bf16_weights
+goseek --input-fp8-hf-path /path/to/fp8_weights --output-bf16-hf-path /path/to/bf16_weights
 ```
 
 ### Quick Start (SGLang)
 
 ```shell
-git clone https://github.com/deepseek-ai/DeepSeek-V3.git
-cd DeepSeek-V3/inference
-pip install -r requirements.txt
+git clone https://github.com/leycm/GoSeek-V3.git
+cd GoSeek-V3/interface/
+go run main.go
 ```
 
 Download model weights from Hugging Face into `/path/to/DeepSeek-V3`, then convert:
 
 ```shell
-python convert.py --hf-ckpt-path /path/to/DeepSeek-V3 \
+go run convert.go --hf-ckpt-path /path/to/DeepSeek-V3 \
   --save-path /path/to/DeepSeek-V3-Demo \
   --n-experts 256 --model-parallel 16
 ```
 
 Run interactive chat:
-
 ```shell
 torchrun --nnodes 2 --nproc-per-node 8 --node-rank $RANK --master-addr $ADDR \
-  generate.py --ckpt-path /path/to/DeepSeek-V3-Demo \
+  generate.go --ckpt-path /path/to/DeepSeek-V3-Demo \
   --config configs/config_671B.json \
   --interactive --temperature 0.7 --max-new-tokens 200
 ```
 
 > **System Requirements:** Linux, Python 3.10. macOS and Windows are not supported. Hugging Face Transformers is not directly supported.
-
 ---
 
 ## 5. License
