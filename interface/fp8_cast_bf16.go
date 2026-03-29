@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"sort"
 
-	kernel "goseek/kernal"
+	"goseek/kernel"
 
 	"github.com/nlpodyssey/safetensors"
 	torch "github.com/wangkuiyi/gotorch"
