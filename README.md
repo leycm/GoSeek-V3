@@ -19,9 +19,8 @@
 1. [Introduction](#1-introduction)
 2. [Model Summary](#2-model-summary)
 3. [Model Downloads](#3-model-downloads)
-4. [How to Run Locally](#4-how-to-run-locally)
-5. [License](#5-license)
-6. [Contact](#6-contact)
+4. [License](#4-license)
+5. [Contact](#5-contact)
 
 ---
 
@@ -79,43 +78,7 @@ The underlying model was pre-trained on 14.8 trillion diverse, high-quality toke
 
 ---
 
-## 4. How to Run Locally
-
-GoSeek-V3 supports multiple inference backends. Since FP8 training is natively adopted in the original framework, only FP8 weights are provided. To convert to BF16:
-
-```shell
-cd inference
-goseek --input-fp8-hf-path /path/to/fp8_weights --output-bf16-hf-path /path/to/bf16_weights
-```
-
-### Quick Start (SGLang)
-
-```shell
-git clone https://github.com/leycm/GoSeek-V3.git
-cd GoSeek-V3/interface/
-go run main.go
-```
-
-Download model weights from Hugging Face into `/path/to/DeepSeek-V3`, then convert:
-
-```shell
-go run convert.go --hf-ckpt-path /path/to/DeepSeek-V3 \
-  --save-path /path/to/DeepSeek-V3-Demo \
-  --n-experts 256 --model-parallel 16
-```
-
-Run interactive chat:
-```shell
-torchrun --nnodes 2 --nproc-per-node 8 --node-rank $RANK --master-addr $ADDR \
-  generate.go --ckpt-path /path/to/DeepSeek-V3-Demo \
-  --config configs/config_671B.json \
-  --interactive --temperature 0.7 --max-new-tokens 200
-```
-
-> **System Requirements:** Linux, Python 3.10. macOS and Windows are not supported. Hugging Face Transformers is not directly supported.
----
-
-## 5. License
+## 4. License
 
 This code repository is licensed under the [MIT License](LICENSE-CODE).
 
@@ -125,7 +88,7 @@ This project (GoSeek-V3) is an independent Go reimplementation and is not affili
 
 ---
 
-## 6. Contact
+## 5. Contact
 
 For questions about this Go runtime, please open an issue in this repository or write [leycm@proton.me](mailto:leycm@proton.me).
 
