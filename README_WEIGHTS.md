@@ -66,11 +66,13 @@ DeepSeek-V3 natively supports FP8 weight format with 128x128 block scaling.
 The FP8 weight file introduces a `quantization_config` field to describe the quantization method. Below is an example configuration:
 
 ```json
-"quantization_config": {
-  "activation_scheme": "dynamic",
-  "fmt": "e4m3",
-  "quant_method": "fp8",
-  "weight_block_size": [128, 128]
+{
+  "quantization_config": {
+    "activation_scheme": "dynamic",
+    "fmt": "e4m3",
+    "quant_method": "fp8",
+    "weight_block_size": [128, 128]
+  }
 }
 ```
 
