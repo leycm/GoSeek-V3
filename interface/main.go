@@ -2,8 +2,9 @@
 //
 // This file is a Go rewrite of the original Python implementation
 // designed to run DeepSeek models.
+// Original by DeepSeek: https://github.com/deepseek-ai/DeepSeek-V3/blob/main/interface/main.py
 //
-// Modified by <your name>, 2026.
+// Modified by Lennard <leycm@proton.me>, 2026.
 //
 // This project is not affiliated with or endorsed by DeepSeek.
 package main
