@@ -1,0 +1,137 @@
+# GoSeek-3 A Go runtime for DeepSeek models.
+#
+# This file is a modified gitignore to fit Go files
+# instead of the original Python implementation.
+# Original by DeepSeek: https://github.com/deepseek-ai/DeepSeek-V3/blob/main/.gitignore
+#
+# Modified by Lennard <leycm@proton.me>, 2026.
+#
+# This project is not affiliated with or endorsed by DeepSeek.
+
+# Compiled binaries / build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.app
+
+# Go build directories
+
+bin/
+build/
+dist/
+target/
+out/
+
+# Go workspace / modules
+
+go.work
+go.work.sum
+
+# Dependency directories (optional, usually not used with Go modules)
+
+vendor/
+
+# Coverage reports
+
+coverage.out
+coverage.html
+*.coverprofile
+
+# Go test cache
+
+*.test
+*.prof
+
+# Logs
+
+*.log
+
+# Environment files
+
+.env
+.env.local
+.env.*.local
+
+# IDE / Editor settings
+
+# VS Code
+
+.vscode/*
+
+# JetBrains / GoLand
+
+.idea/
+
+# Vim
+
+*.swp
+*.swo
+
+# macOS
+
+.DS_Store
+
+# Windows
+
+Thumbs.db
+
+# Temporary files
+
+tmp/
+temp/
+
+# Debug
+
+__debug_bin
+
+# Documentation build output
+
+docs/_build/
+site/
+
+# Generated files
+
+*.generated.go
+
+# Local configuration
+
+local_settings.go
+
+# Database files (if used locally)
+
+*.db
+*.sqlite
+*.sqlite3
+
+# Test output directories
+
+testdata/
+
+# Benchmark results
+
+*.bench
+
+# Misc
+
+*.pid
+*.seed
+
+# Optional: ignore compiled plugins
+
+*.plugin
+
+# Optional: ignore Go coverage tool directory
+
+.coverage/
+
+# Optional: Docker / container artifacts
+
+docker-compose.override.yml
+
+# Optional: Kubernetes
+
+*.kubeconfig
