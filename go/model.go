@@ -110,7 +110,7 @@ func newTensor(shape ...int) Tensor {
 }
 
 // numel returns the total number of elements.
-func (t Tensor) numel() int {
+func (t *Tensor) numel() int {
 	n := 1
 	for _, d := range t.Shape {
 		n *= d
@@ -119,14 +119,14 @@ func (t Tensor) numel() int {
 }
 
 // clone returns a deep copy.
-func (t Tensor) clone() Tensor {
+func (t *Tensor) clone() Tensor {
 	c := newTensor(t.Shape...)
 	copy(c.Data, t.Data)
 	return c
 }
 
 // toGotorch wraps Data into a 1-D gotorch Tensor for kernel calls.
-func (t Tensor) toGotorch() torch.Tensor {
+func (t *Tensor) toGotorch() torch.Tensor {
 	return torch.NewTensor(t.Data)
 }
 
@@ -157,7 +157,7 @@ func (t *Tensor) randn() {
 }
 
 // linearFwd computes x @ wT + bias.
-// x: (*, inF)  w: (outF, inF)  bias: (outF,) or nil  →  (*, outF)
+// x: (*, inF)  w: (outF, inF)  bias: (outF, ...) or nil  ->  (*, outF)
 func linearFwd(x, w Tensor, bias []float32) Tensor {
 	outF := w.Shape[0]
 	inF := w.Shape[1]
@@ -595,8 +595,8 @@ func (r *RMSNorm) forward(x Tensor) Tensor { return rmsNormFwd(x, r.Weight, r.Ep
 // LinearLayer holds a weight matrix (outF × inF) and an optional bias.
 type LinearLayer struct {
 	Weight   Tensor
-	Bias     []float32 // nil → no bias
-	Scales   []float32 // non-nil → FP8-quantised weight
+	Bias     []float32 // nil -> no bias
+	Scales   []float32 // non-nil -> FP8-quantised weight
 	ScaleFmt string
 }
 
@@ -1004,7 +1004,7 @@ func (g *Gate) forward(x Tensor) (Tensor, [][]int) {
 		}
 	}
 
-	rs := float32(g.args.RouteScale)
+	rs := g.args.RouteScale
 	for i := range weights.Data {
 		weights.Data[i] *= rs
 	}

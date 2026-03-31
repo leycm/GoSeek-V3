@@ -96,8 +96,8 @@ func generate(
 	}
 
 	totalLen := model.args.MaxSeqLen
-	if cap := maxNewTokens + maxPrompt; cap < totalLen {
-		totalLen = cap
+	if tokenCap := maxNewTokens + maxPrompt; tokenCap < totalLen {
+		totalLen = tokenCap
 	}
 
 	bsz := len(promptTokens)
@@ -259,23 +259,35 @@ func mainGenerate() {
 	flag.Parse()
 
 	if *ckptPath == "" || *configPath == "" {
-		fmt.Fprintln(os.Stderr, "both --ckpt-path and --config are required")
+		_, err := fmt.Fprintln(os.Stderr, "both --ckpt-path and --config are required")
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 	if !*interactive && *inputFile == "" {
-		fmt.Fprintln(os.Stderr, "either --input-file or --interactive must be specified")
+		_, err := fmt.Fprintln(os.Stderr, "either --input-file or --interactive must be specified")
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 
 	// load config
 	cfgData, err := os.ReadFile(*configPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "cannot read config:", err)
+		_, err := fmt.Fprintln(os.Stderr, "cannot read config:", err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 	args := DefaultModelArgs()
 	if err := json.Unmarshal(cfgData, &args); err != nil {
-		fmt.Fprintln(os.Stderr, "cannot parse config:", err)
+		_, err := fmt.Fprintln(os.Stderr, "cannot parse config:", err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 	fmt.Println(args)
@@ -332,7 +344,10 @@ func mainGenerate() {
 	// batch mode
 	data, err := os.ReadFile(*inputFile)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "cannot read input file:", err)
+		_, err := fmt.Fprintln(os.Stderr, "cannot read input file:", err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 	lines := strings.Split(strings.TrimRight(string(data), "\n"), "\n")
@@ -344,10 +359,13 @@ func mainGenerate() {
 	}
 
 	if len(prompts) > args.MaxBatchSize {
-		fmt.Fprintf(os.Stderr,
+		_, err := fmt.Fprintf(os.Stderr,
 			"number of prompts (%d) exceeds maximum batch size (%d)\n",
 			len(prompts), args.MaxBatchSize,
 		)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 

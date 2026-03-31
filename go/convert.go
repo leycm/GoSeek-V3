@@ -80,7 +80,7 @@ type TensorMeta struct {
 }
 
 // safetensorsHeader is the JSON structure at the start of a .safetensors file.
-type safetensorsHeader map[string]*TensorMeta // name → meta; "__metadata__" key is ignored
+type safetensorsHeader map[string]*TensorMeta // name -> meta; "__metadata__" key is ignored
 
 // RawTensor holds a tensor's metadata and its raw bytes.
 type RawTensor struct {
@@ -147,7 +147,12 @@ func readSafetensors(path string) (map[string]*RawTensor, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+
+		}
+	}(f)
 
 	// First 8 bytes: little-endian uint64 = header length.
 	var headerLen uint64
@@ -226,7 +231,12 @@ func writeSafetensors(path string, tensors map[string]*RawTensor) error {
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer func(out *os.File) {
+		err := out.Close()
+		if err != nil {
+
+		}
+	}(out)
 
 	if err := binary.Write(out, binary.LittleEndian, uint64(len(headerBytes))); err != nil {
 		return err
@@ -401,7 +411,10 @@ func convertCheckpoint(hfCkptPath, savePath string, nExperts, mp int) error {
 			src := filepath.Join(hfCkptPath, e.Name())
 			dst := filepath.Join(savePath, e.Name())
 			if err := copyFile(src, dst); err != nil {
-				fmt.Fprintf(os.Stderr, "warning: could not copy %s: %v\n", e.Name(), err)
+				_, err := fmt.Fprintf(os.Stderr, "warning: could not copy %s: %v\n", e.Name(), err)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -415,13 +428,23 @@ func copyFile(src, dst string) error {
 	if err != nil {
 		return err
 	}
-	defer in.Close()
+	defer func(in *os.File) {
+		err := in.Close()
+		if err != nil {
+
+		}
+	}(in)
 
 	out, err := os.Create(dst)
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer func(out *os.File) {
+		err := out.Close()
+		if err != nil {
+
+		}
+	}(out)
 
 	_, err = io.Copy(out, in)
 	return err
@@ -435,17 +458,26 @@ func main() {
 	flag.Parse()
 
 	if *hfCkptPath == "" || *savePath == "" || *nExperts == 0 || *mp == 0 {
-		fmt.Fprintln(os.Stderr, "All flags are required: --hf-ckpt-path, --save-path, --n-experts, --model-parallel")
+		_, err := fmt.Fprintln(os.Stderr, "All flags are required: --hf-ckpt-path, --save-path, --n-experts, --model-parallel")
+		if err != nil {
+			return
+		}
 		flag.Usage()
 		os.Exit(1)
 	}
 	if *nExperts%*mp != 0 {
-		fmt.Fprintf(os.Stderr, "n-experts (%d) must be divisible by model-parallel (%d)\n", *nExperts, *mp)
+		_, err := fmt.Fprintf(os.Stderr, "n-experts (%d) must be divisible by model-parallel (%d)\n", *nExperts, *mp)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 
 	if err := convertCheckpoint(*hfCkptPath, *savePath, *nExperts, *mp); err != nil {
-		fmt.Fprintln(os.Stderr, "Error:", err)
+		_, err := fmt.Fprintln(os.Stderr, "Error:", err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 }
