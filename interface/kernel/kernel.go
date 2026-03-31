@@ -1,4 +1,4 @@
-// Package kernel of GoSeek-V3 — A Go runtime for DeepSeek models.
+// Package kernel of GoSeek-V3 - A Go runtime for DeepSeek models.
 //
 // This file is a Go rewrite of the original Python implementation
 // designed to run DeepSeek models.
