@@ -1089,7 +1089,7 @@ func (m *MoE) forward(x Tensor) Tensor {
 	return reshape(addElem(y, z), origShape...)
 }
 
-// ffnLayer is the common interface for MLP and MoE.
+// ffnLayer is the common gointerface for MLP and MoE.
 type ffnLayer interface{ forward(Tensor) Tensor }
 
 // Block is a single Transformer layer (pre-norm, residual).
